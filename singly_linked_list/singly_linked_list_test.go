@@ -8,6 +8,10 @@ func Test_LinkedList(t *testing.T) {
 		t.Fatal("list was nil")
 	}
 
+	if list.String() != "[]" {
+		t.Fatal("Unexpected String output:", list.String())
+	}
+
 	list.Append("hello")
 	if list.String() != "[hello]" {
 		t.Fatal("Expected [hello]")

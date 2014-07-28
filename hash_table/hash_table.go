@@ -1,8 +1,10 @@
 package hash_table
 
 import (
+	"fmt"
 	"hash"
 	"hash/adler32"
+	"strings"
 )
 
 var digest hash.Hash32 = adler32.New()
@@ -48,4 +50,14 @@ func (t *HashTable) Put(key, value string) {
 		}
 	}
 	t.Table[hash] = &Node{key, value}
+}
+
+func (t HashTable) String() string {
+	str := []string{}
+	for _, v := range t.Table {
+		if v != nil {
+			str = append(str, fmt.Sprint(v.Key, ":", v.Value))
+		}
+	}
+	return "{" + strings.Join(str, ", ") + "}"
 }
