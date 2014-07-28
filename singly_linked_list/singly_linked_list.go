@@ -3,6 +3,7 @@ package linkedlist
 import (
 	"errors"
 	"fmt"
+	"strings"
 )
 
 type Node struct {
@@ -19,17 +20,13 @@ func NewSinglyLinkedList() *SinglyLinkedList {
 }
 
 func (l *SinglyLinkedList) Append(value string) {
-	if l.head == nil {
-		l.head = &Node{Data: value}
-		return
-	}
-	cur := l.head
+	cur := &l.head
 	for {
-		if cur.Next == nil {
-			cur.Next = &Node{Data: value}
+		if *cur == nil {
+			*cur = &Node{Data: value}
 			return
 		}
-		cur = cur.Next
+		cur = &(*cur).Next
 	}
 }
 
@@ -45,6 +42,21 @@ func (l SinglyLinkedList) Get(index int) (string, error) {
 			return cur.Data, nil
 		}
 		cur = cur.Next
+		i += 1
 	}
 	return "", errors.New(fmt.Sprint("Failed to find item at index ", index))
+}
+
+func (l SinglyLinkedList) String() string {
+	cur := l.head
+	str := []string{}
+
+	for {
+		if cur == nil {
+			break
+		}
+		str = append(str, cur.Data)
+		cur = cur.Next
+	}
+	return "[" + strings.Join(str, ", ") + "]"
 }
