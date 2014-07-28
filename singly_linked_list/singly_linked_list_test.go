@@ -1,6 +1,9 @@
 package linkedlist
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func Test_LinkedList(t *testing.T) {
 	list := NewSinglyLinkedList()
@@ -22,6 +25,15 @@ func Test_LinkedList(t *testing.T) {
 
 	check(list, 0, "hello", t)
 	check(list, 1, "world", t)
+
+	fmt.Println(list)
+	v, e := list.Pop(0)
+	fmt.Println(list)
+	if v != "hello" || e != nil {
+		t.Fatal("Pop failed:", v, "-", e)
+	}
+
+	check(list, 0, "world", t)
 }
 
 func check(list *SinglyLinkedList, index int, value string, t *testing.T) {
