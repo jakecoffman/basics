@@ -31,23 +31,25 @@ func (l *SinglyLinkedList) Append(value string) {
 }
 
 func (l SinglyLinkedList) Get(index int) (string, error) {
-	i := 0
-	cur := l.head
-
-	for {
-		if cur == nil {
-			break
-		}
-		if i == index {
-			return cur.Data, nil
-		}
-		cur = cur.Next
-		i += 1
-	}
-	return "", errors.New(fmt.Sprint("Failed to find item at index ", index))
+	return l.find(index, func(cur **Node, _ **Node) (string, error) {
+		return (*cur).Data, nil
+	})
 }
 
 func (l *SinglyLinkedList) Pop(index int) (string, error) {
+	return l.find(index, func(cur **Node, prev **Node) (string, error) {
+		temp := (*cur).Data
+		if prev != nil {
+			(*prev).Next = (*cur).Next
+		} else {
+			l.head = (*cur).Next
+		}
+		return temp, nil
+	})
+
+}
+
+func (l SinglyLinkedList) find(index int, f func(cur **Node, prev **Node) (string, error)) (string, error) {
 	i := 0
 	cur := &l.head
 	var prev **Node
@@ -57,15 +59,8 @@ func (l *SinglyLinkedList) Pop(index int) (string, error) {
 			break
 		}
 		if i == index {
-			temp := (*cur).Data
-			if prev != nil {
-				(*prev).Next = (*cur).Next
-			} else {
-				l.head = (*cur).Next
-			}
-			return temp, nil
+			return f(cur, prev)
 		}
-		prev = cur
 		cur = &(*cur).Next
 		i += 1
 	}
